@@ -6,11 +6,20 @@ import shutil
 class fs:
     """ Class to contain the folder structure, with input, dl, tmp, db and out folders created from main
     """
-    input = os.getcwd()+"\\input\\"
-    dl = os.getcwd()+"\\dl\\"
-    tmp = os.getcwd()+"\\tmp\\"
-    db = os.getcwd()+"\\db\\"
-    out = os.getcwd()+"\\out\\"
+    if os.name == "posix":
+        input = os.getcwd()+"//input//"
+        dl = os.getcwd()+"//dl//" 
+        tmp = os.getcwd()+"//tmp//"
+        db = os.getcwd()+"//db//"
+        out = os.getcwd()+"//out//"
+
+    else:
+        input = os.getcwd()+"\\input\\"
+        dl = os.getcwd()+"\\dl\\"
+        tmp = os.getcwd()+"\\tmp\\"
+        db = os.getcwd()+"\\db\\"
+        out = os.getcwd()+"\\out\\"
+    
     
     def init(self):
         folders = [x for x in dir(self) if "__" not in x]
