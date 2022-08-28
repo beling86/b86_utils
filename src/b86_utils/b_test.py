@@ -1,4 +1,4 @@
-from b_utils import m_call
+from b86_utils import m_call
 
 def mult_and_square(pair):
     a = pair[0]
