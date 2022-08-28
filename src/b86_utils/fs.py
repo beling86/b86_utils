@@ -4,6 +4,8 @@ import zipfile
 import shutil
 
 class fs:
+    """ Class to contain the folder structure, with input, dl, tmp, db and out folders created from main
+    """
     input = os.getcwd()+"\\input\\"
     dl = os.getcwd()+"\\dl\\"
     tmp = os.getcwd()+"\\tmp\\"
