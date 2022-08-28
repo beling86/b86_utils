@@ -1,0 +1,10 @@
+[project]
+name = "b86_utils"
+description = "beling86 general purpose functions"
+version = "0.0.1"
+author = "beling86"
+
+dependencies = [
+    "bs4",
+    "requests",
+]
