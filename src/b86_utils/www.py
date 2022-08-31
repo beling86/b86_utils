@@ -24,13 +24,12 @@ def p_dl(args):
     """
     url = args[0]
     save_path = args[1]
-    print(f'downloading {url} to {save_path} ')
-   
+
     t0 = time.time()
     try:
         r = requests.get(url)
         with open(save_path, 'wb') as f:
             f.write(r.content)
-        print(f'{save_path} downloaded in {round(time.time()-t0,2)} seconds')
+
     except Exception as e:
         print(f'error downloading {url}', e)

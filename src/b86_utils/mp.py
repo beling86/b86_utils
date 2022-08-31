@@ -1,7 +1,8 @@
 import concurrent.futures
 import time
+from tqdm import tqdm
 
-def call(fn, args, workers = 5, mode="p", verbose = True):
+def call(fn, args, workers = 5, mode="p"):
     """execute a function in a batch. All functions from this module starting with 
     p can be batched.
 
@@ -18,28 +19,37 @@ def call(fn, args, workers = 5, mode="p", verbose = True):
     t0 = time.time()
     ret = []
     
-    if mode == "p":
-        with concurrent.futures.ProcessPoolExecutor(max_workers = workers) as executor:
-            futures = []
-            for item in args:
-                futures.append(executor.submit(fn,item))
-            for future in concurrent.futures.as_completed(futures):
-                ret.append(future.result())
+    match mode:
+        case "p": m = "Process"
+        case "t": m = "Threaded"
+        case "s": m = "Serial"
     
+    
+    pbar = tqdm(total=len(args),desc=f'{len(args)} {m} calls of {fn.__name__}')
+
+    if mode == "s":
+        
+        for arg in args:
+            pbar.update(n=1)
+            ret.append(fn(arg))
+
     if mode == "t":
         with concurrent.futures.ThreadPoolExecutor(max_workers = workers) as executor:
             futures = []
             for item in args:
                 futures.append(executor.submit(fn,item))
-            for future in concurrent.futures.as_completed(futures):
-                ret.append(future.result())
-                
-    if mode == "s":
-        for arg in args:
-            ret.append(fn(arg))
-
-    if verbose:
-        print(f'#MP: mode: {mode}, size:{len(args)}, duration: {round(time.time()-t0,2)}, workers: {workers}')
-
+            for _ in concurrent.futures.as_completed(futures):
+                pbar.update(n=1)
+                ret.append(_.result())
+                            
+    if mode == "p":
+        with concurrent.futures.ProcessPoolExecutor(max_workers = workers) as executor:
+            futures = []
+            for item in args:
+                futures.append(executor.submit(fn,item))
+            for _ in concurrent.futures.as_completed(futures):
+                pbar.update(n=1)
+                ret.append(_.result())
+                                           
     return ret
 
