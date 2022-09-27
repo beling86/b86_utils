@@ -2,6 +2,7 @@ To install please use pip install git+https://github.com/beling86/b86_utils#egg=
 
 installing code-server on..
 #Update termux and install debian
+termux-setup-storage
 pkg update -y && pkg install proot-distro -y && proot-distro install debian && proot-distro login debian
 #Update debian
 pkg update -y && pkg upgrade -y
@@ -40,7 +41,7 @@ auth = none
 #Exit debian, take opportunity to automate debian startup.. 
 exit
 nano /data/data/com.termux/files/usr/etc/profile
-proot-distro login debian
+proot-distro login debian --bind /data/data/com.termux/files/home/storage:/storage
 
 #now everything is set, finally install python
 
