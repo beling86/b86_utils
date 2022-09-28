@@ -91,3 +91,8 @@ def edit_df(df:pd.DataFrame):
     df = d.data.copy() 
     d.kill()
     return df
+
+def filter_df(df: pd.DataFrame, filters:dict):
+    for col in filters.keys():
+        df = df[df[col].isin(filters[col])].reset_index(drop=True)
+    return df
