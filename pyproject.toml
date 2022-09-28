@@ -1,9 +1,13 @@
 [project]
 name = "b86_utils"
 description = "beling86 general purpose functions"
-version = "0.0.1"
+version = "0.0.2"
 
 dependencies = [
     "bs4",
     "requests",
+    "pygsheets",
+    "dtale",
+    "pandas",
+    "tqdm",
 ]

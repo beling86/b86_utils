@@ -1,8 +1,9 @@
 import concurrent.futures
 import time
 from tqdm import tqdm
+import multiprocessing
 
-def call(fn, args, workers = 5, mode="p"):
+def call(fn, args, workers = 5, mode="p", wmax = False):
     """execute a function in a batch. All functions from this module starting with 
     p can be batched.
 
@@ -16,6 +17,9 @@ def call(fn, args, workers = 5, mode="p"):
     Returns:
         _type_: _description_
     """
+    if wmax:
+        workers = multiprocessing.cpu_count()-1
+    
     t0 = time.time()
     ret = []
     

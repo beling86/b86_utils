@@ -1,2 +1,6 @@
 bs4
 requests
+pygsheets
+dtale
+pandas
+tqdm

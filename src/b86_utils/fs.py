@@ -2,6 +2,9 @@ import os
 import time
 import zipfile
 import shutil
+import pygsheets
+import dtale
+import pandas as pd
 
 class fs:
     """ Class to contain the folder structure, with input, dl, tmp, db and out folders created from main
@@ -21,7 +24,7 @@ class fs:
         out = os.getcwd()+"\\out\\"
     
     
-    def init(self):
+    def __init__(self):
         folders = [x for x in dir(self) if "__" not in x]
         for folder in folders:
             path = getattr(self, folder)
@@ -36,10 +39,27 @@ class fs:
             if type(path) == str and os.path.isdir(path):
                 print(f'#FS: removing {path}')
                 shutil.rmtree(path)
+
+class gdrive_fs:
+    def __init__(self, account_file:str, filename:str):
+        self.gc = pygsheets.authorize(service_account_file=account_file)
+        self.sheet = self.gc.open(filename)
         
-        
-    
-    
+            
+    def get_df(self, worksheet_name:str):
+        worksheet = self.sheet.worksheet_by_title(worksheet_name)
+        return worksheet.get_as_df()
+
+    def write_df(self,df, worksheet_name:str, force_create=False):
+        try:
+            worksheet = self.sheet.worksheet('title',worksheet_name)
+        except pygsheets.exceptions.WorksheetNotFound:
+            if force_create:
+                worksheet = self.sheet.add_worksheet(worksheet_name)
+            else:
+                raise pygsheets.exceptions.WorksheetNotFound()
+
+        worksheet.set_dataframe(df,(1,1))
 
 def p_del(path):
     """Delete a single file
@@ -63,3 +83,11 @@ def p_unzip(args):
     f = zipfile.ZipFile(file)
     f.extractall(path)
     return(path, time.time()-t0)
+
+def edit_df(df:pd.DataFrame):
+    d = dtale.show(df, open_browser=True)
+    print(f'To edit the DF, open localhost:40000 on your browser... press any key to continue')
+    a = input()
+    df = d.data.copy() 
+    d.kill()
+    return df
